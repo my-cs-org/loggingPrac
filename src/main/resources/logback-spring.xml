@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 로그가 어떻게 기록되고, 어디에 얼마나 저장되며, 어떤 형식으로 출력될 지 세부적으로 제어하기 위한 파일 -->
+<!-- 참고 링크: https://logback.qos.ch/documentation.html -->
+<configuration>
+
+    <!-- 로그 파일이 저장될 경로를 지정 -->
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!-- Console Appender: 로그를 콘솔에 출력하기 위한 설정 -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 로그 출력 형식을 지정
+                 %d: 날짜시간
+                 %thread: 스레드 이름
+                 %-5level: 로그 레벨
+                 %logger{36}: 로거 이름(최대 36자)
+                 %msg: 로그 메시지
+                 %n: 줄바꿈 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender: 로그를 파일에 저장하기 위한 설정 -->
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- Console Appender와 동일한 출력 형식을 사용 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <!-- 로그 파일 롤링 정책을 설정 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 날짜별로 로그 파일을 생성 -->
+            <fileNamePattern>${LOG_PATH}/client-requests.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 최대 30일간의 로그 파일을 보관 -->
+            <maxHistory>30</maxHistory>
+            <!-- 전체 로그 파일 크기를 최대 3GB로 제한 -->
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Root Logger: 전체 로그 레벨과 사용할 Appender를 지정 -->
+    <root level="info">
+        <!-- 콘솔과 파일 모두에 로그를 출력 -->
+        <appender-ref ref="Console"/>
+        <appender-ref ref="File"/>
+    </root>
+</configuration>
