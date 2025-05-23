@@ -68,8 +68,10 @@ public class LogAnalyzerService {
     private LogEntry parseLine(String line) {
         Matcher matcher = LOG_PATTERN.matcher(line);
         if (matcher.find()) {
-            logger.debug("로그 패턴과 일치하는 로그: {}", matcher.group());
-            logger.debug("로그 패턴과 일치하는 요청 url: {}", matcher.group(2));
+
+            /* 설명. 로그 파일에 남으면 로그 안의 패턴 일치 카운팅에 영향을 주므로 println으로 출력 */
+            System.out.println("로그 패턴과 일치하는 로그: {}" + matcher.group());
+            System.out.println("로그 패턴과 일치하는 요청 url: {}" + matcher.group(2));
             return new LogEntry(
                     LocalDateTime.parse(matcher.group(1), DATE_FORMAT),
                     matcher.group(2).trim(),
